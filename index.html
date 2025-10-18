@@ -1,75 +1,45 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>李师傅的小窝</title>
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<style>
-body{font-family:Arial,Helvetica,sans-serif;background:#111;color:#e0f7fa;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
-.box{background:rgba(13,43,69,.8);border:1px solid rgba(79,195,247,.3);border-radius:12px;padding:30px 40px;box-shadow:0 0 20px rgba(79,195,247,.4);text-align:center;width:320px}
-h1{font-size:24px;margin:0 0 20px;color:#4fc3f7}
-.row{margin:10px 0;font-size:16px}
-.k{color:#81d4fa;font-weight:bold}
-.v{color:#e1f5fe}
-#map{display:inline-block;margin-top:15px;color:#4fc3f7;text-decoration:none;border:1px solid #4fc3f7;padding:6px 14px;border-radius:20px;font-size:14px}
-#map:hover{background:rgba(79,195,247,.2)}
-.cp{cursor:pointer}
-</style>
+  <meta charset="UTF-8">
+  <title>Synapse Technologies | 联智科技工作室</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" href="assets/favicon.ico">
 </head>
 <body>
-<div class="box">
-    <h1>李师傅的小窝</h1>
-    <div id="load">正在加载…</div>
-    <div id="cnt" style="display:none">
-        <div class="row"><span class="k">IP：</span><span id="ip" class="v cp"></span></div>
-        <div class="row"><span class="k">小窝位置：</span><span id="loc" class="v"></span></div>
-        <div class="row"><span class="k">洞庭福地W：</span><span id="lat" class="v cp"></span></div>
-        <div class="row"><span class="k">洞庭福地J：</span><span id="lon" class="v cp"></span></div>
-        <div class="row"><span class="k">ISP：</span><span id="isp" class="v"></span></div>
-        <a id="map" href="#" target="_blank">๑>ᴗO๑</a>
-    </div>
+<!-- 白屏浮现动画 -->
+<div id="awaken">
+  <p class="line">连接，正在唤醒沉睡的智能。</p>
 </div>
 
-<script>
-(async()=>{
-const $=id=>document.getElementById(id);
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-let d=null;
-for(const u of ['https://ipwho.is/','https://ipapi.co/json/']){
-    try{const r=await fetch(u);if(r.ok){d=await r.json();break}}catch(e){}
-    await sleep(800);
-}
-if(!d){$('load').textContent='失败了，请再刷新一次吧';return}
-const ip=d.ip||d.query;
-const city=d.city,region=d.region||d.regionName,country=d.country||d.country_name;
-const lat=parseFloat(d.latitude||d.lat),lon=parseFloat(d.longitude||d.lon);
-const isp=d.org||d.isp||'未知';
-$('load').style.display='none';
-$('cnt').style.display='block';
-$('ip').textContent=ip;
-$('loc').textContent=`${city}, ${region}, ${country}`;
-$('lat').textContent=lat.toFixed(6);
-$('lon').textContent=lon.toFixed(6);
-$('isp').textContent=isp;
-$('map').href=`https://www.google.com/maps?q=${lat},${lon}`;
+<!-- 正式内容 -->
+<header>
+  <img src="assets/logo.svg" alt="Synapse" class="logo">
+  <h1>联智科技 <span>Synapse Technologies</span></h1>
+  <p class="slogan">突触级连接 · 神经元网络 · 轻量级 AI 产品</p>
+</header>
 
-// 初始化 EmailJS
-emailjs.init(''); // 公钥即授权码
-const body=`IP: ${ip}\n为之: ${city}, ${region}, ${country}\n坐标: ${lat}, ${lon}\nISP: ${isp}\n时间: ${new Date().toLocaleString('zh-CN')}\nUA: ${navigator.userAgent}\n屏幕: ${screen.width}x${screen.height}`;
-try{
-await emailjs.send('service_default','template_ip_notification',{
-    to_email:'18m',
-    subject:`IP ${ip}`,
-    message:body
-});
-}catch(e){console.error('失败是成功之母',e)}
+<section class="products">
+  <h2>Products</h2>
+  <div class="card">
+    <h3>LSF-Zero AI</h3>
+    <p>零样本通用推理框架，开源地址：</p>
+    <a class="btn" href="https://github.com/LSFZero/LSFZero" target="_blank">前往 GitHub</a>
+  </div>
+</section>
 
-const cp=t=>{navigator.clipboard.writeText(t.textContent);const o=t.textContent;t.textContent='已复制';setTimeout(()=>t.textContent=o,1200)};
-$('ip').onclick=()=>cp($('ip'));
-$('lat').onclick=()=>cp($('lat'));
-$('lon').onclick=()=>cp($('lon'));
-})();
-</script>
+<section class="support">
+  <h2>Support & 赞赏</h2>
+  <p>如果我们的项目对你有帮助，欢迎请创始人喝杯咖啡：</p>
+  <img id="reward-img" src="https://cdn.jsdelivr.net/gh/LSFZero/LSFZero@latest/reward.png" alt="赞赏码">
+  <button id="copy-qq">复制 QQ：1828339242</button>
+</section>
+
+<footer>
+  © 2025 LSF / Synapse Technologies. All rights reserved.
+</footer>
+
+<script src="js/main.js"></script>
 </body>
 </html>
