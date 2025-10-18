@@ -1,0 +1,22 @@
+:root{
+  --bg:#ffffff;
+  --fg:#000000;
+  --accent:#2563eb;
+  --font:"Inter","Helvetica Neue",sans-serif;
+}
+html,body{margin:0;height:100%;font-family:var(--font);background:var(--bg);color:var(--fg);}
+#awaken{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
+#awaken .line{font-size:2rem;letter-spacing:.1em;opacity:0;animation:fadeIn 2.2s ease forwards;}
+#awaken .line span{font-size:2.4rem;color:var(--accent);}
+@keyframes fadeIn{to{opacity:1;} }
+header{text-align:center;padding:4rem 1rem 2rem;}
+header .logo{width:60px;height:60px;}
+header h1{font-size:2rem;margin:.5rem 0;}
+header span{font-weight:400;font-size:1.2rem;color:var(--accent);}
+.slogan{font-size:1rem;color:#555;}
+section{padding:2rem 1rem;max-width:800px;margin:auto;}
+.card{border:1px solid #e5e7eb;border-radius:8px;padding:1.5rem;margin-bottom:1rem;}
+.btn{display:inline-block;margin-top:1rem;padding:.6rem 1.2rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;}
+#reward-img{width:200px;margin-top:1rem;border:1px solid #e5e7eb;}
+#copy-qq{margin-top:1rem;padding:.5rem 1rem;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;}
+footer{text-align:center;padding:2rem 0;font-size:.8rem;color:#777;}
